@@ -9,6 +9,7 @@ export interface WorkplaceLoginContext {
   email?: string;
   tenantKey: string;
   tenantName: string;
+  tenantOrigin: string;
   locale: "en" | "ar";
   logoUrl?: string;
   primaryColor?: string;
@@ -62,6 +63,8 @@ export function decodeWorkplaceLoginContext(token: string | null | undefined, no
       typeof value.tenantName !== "string" ||
       value.tenantName.trim().length < 1 ||
       value.tenantName.length > 120 ||
+      typeof value.tenantOrigin !== "string" ||
+      !["http:", "https:"].includes(new URL(value.tenantOrigin).protocol) ||
       !["en", "ar"].includes(value.locale) ||
       (value.email !== undefined && (value.email.length > 320 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email))) ||
       (value.logoUrl !== undefined && !validLogo(value.logoUrl)) ||

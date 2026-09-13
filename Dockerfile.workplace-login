@@ -1,8 +1,12 @@
 FROM node:24-alpine AS build
 WORKDIR /repo
 RUN corepack enable
-COPY . .
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml nx.json ./
+COPY apps/login/package.json apps/login/package.json
+COPY packages/zitadel-client/package.json packages/zitadel-client/package.json
+COPY packages/zitadel-proto/package.json packages/zitadel-proto/package.json
 RUN pnpm install --filter @zitadel/login... --frozen-lockfile
+COPY . .
 RUN pnpm nx run login:build --skip-nx-cache
 
 FROM node:24-alpine

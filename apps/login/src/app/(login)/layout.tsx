@@ -71,7 +71,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <LanguageProvider>
                 <BackgroundWrapper className="workplace-auth-shell">
                   <header className="workplace-auth-header">
-                    <a href="http://platform.localhost:3050" className="workplace-auth-wordmark" aria-label={productName}>
+                    <a
+                      href={workplaceContext?.tenantOrigin || process.env.WORKPLACE_PLATFORM_URL || "/"}
+                      className="workplace-auth-wordmark"
+                      aria-label={productName}
+                    >
                       {workplaceContext?.logoUrl ? (
                         <img src={workplaceContext.logoUrl} alt="" className="workplace-auth-logo" />
                       ) : (
