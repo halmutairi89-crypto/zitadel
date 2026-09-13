@@ -16,6 +16,84 @@
 html {
   --background-color: #ffffff;
   --dark-background-color: #000000;
+  font-family: Inter, "Noto Sans Arabic", "Segoe UI", Arial, sans-serif;
+}
+
+.workplace-auth-shell {
+  min-height: 100vh;
+  color: #14231b;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(45, 150, 91, 0.12), transparent 28rem),
+    linear-gradient(145deg, #f7faf8 0%, #eef5f1 48%, #f9fbfa 100%);
+}
+
+.workplace-auth-header {
+  width: min(1180px, calc(100% - 2rem));
+  min-height: 76px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.workplace-auth-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: inherit;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.workplace-auth-wordmark > span {
+  width: 2.15rem;
+  height: 2.15rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.7rem;
+  background: #187d43;
+  color: white;
+  font-weight: 900;
+}
+
+.workplace-auth-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.workplace-auth-stage {
+  width: 100%;
+  padding: clamp(1rem, 4vw, 4rem) 0 3rem;
+}
+
+.workplace-auth-stage [class*="bg-background-light-400"] {
+  border: 1px solid rgba(20, 35, 27, 0.1);
+  box-shadow: 0 28px 70px rgba(22, 66, 43, 0.13);
+}
+
+.workplace-auth-stage input,
+.workplace-auth-stage button,
+.workplace-auth-stage a {
+  border-radius: 0.75rem;
+}
+
+[dir="rtl"] .workplace-auth-stage input[type="email"],
+[dir="rtl"] .workplace-auth-stage input[name*="login" i] {
+  direction: ltr;
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .workplace-auth-header {
+    min-height: 64px;
+  }
+  .workplace-auth-stage {
+    padding-top: 0.5rem;
+  }
+  .workplace-auth-wordmark strong {
+    font-size: 1rem;
+  }
 }
 
 .form-checkbox {
