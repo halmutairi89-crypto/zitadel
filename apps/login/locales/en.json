@@ -23,8 +23,8 @@
     }
   },
   "loginname": {
-    "title": "Sign in to your workplace",
-    "description": "Enter your work email to continue securely.",
+    "title": "Sign in securely",
+    "description": "Enter your work email to continue.",
     "register": "Register new user",
     "submit": "Continue",
     "labels": {

@@ -81,7 +81,15 @@ export async function persistWorkplaceLoginContext(token: string | null | undefi
   const store = await cookies();
   const context = decodeWorkplaceLoginContext(token);
   if (!context) {
-    store.delete(COOKIE_NAME);
+    // Match the cookie's original base path. A deletion at `/` would leave
+    // the `/auth` cookie active and could show the previous tenant's brand.
+    store.set(COOKIE_NAME, "", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: process.env.NEXT_PUBLIC_BASE_PATH || "/",
+      maxAge: 0,
+    });
     return null;
   }
   store.set(COOKIE_NAME, token!, {
