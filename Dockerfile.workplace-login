@@ -10,6 +10,8 @@ COPY . .
 RUN pnpm nx run login:build --skip-nx-cache
 
 FROM node:24-alpine
+ARG WORKPLACE_LOGIN_REVISION=unknown
+LABEL com.workplace.identity-login.revision=$WORKPLACE_LOGIN_REVISION
 WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs && \
