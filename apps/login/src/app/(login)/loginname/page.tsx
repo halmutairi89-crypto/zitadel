@@ -8,6 +8,7 @@ import { Organization } from "@zitadel/proto/zitadel/org/v2/org_pb";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { headers } from "next/headers";
+import { getWorkplaceLoginContext } from "@/lib/workplace-context";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("loginname");
@@ -24,6 +25,7 @@ export default async function Page(props: { searchParams: Promise<Record<string 
   const submit: boolean = searchParams?.submit === "true";
 
   const _headers = await headers();
+  const workplaceContext = await getWorkplaceLoginContext();
   const { serviceConfig } = getServiceConfig(_headers);
 
   let defaultOrganization;
@@ -67,7 +69,7 @@ export default async function Page(props: { searchParams: Promise<Record<string 
             suffix={orgDomain}
             hideSuffix={branding?.hideLoginNameSuffix}
             submit={submit}
-            allowRegister={!!loginSettings?.allowRegister}
+            allowRegister={!!loginSettings?.allowRegister && workplaceContext?.allowRegistration !== false}
           ></UsernameForm>
         )}
 

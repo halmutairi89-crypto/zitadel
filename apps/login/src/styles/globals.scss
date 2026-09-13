@@ -52,9 +52,18 @@ html {
   display: grid;
   place-items: center;
   border-radius: 0.7rem;
-  background: #187d43;
+  background: var(--workplace-primary, #187d43);
   color: white;
   font-weight: 900;
+}
+
+.workplace-auth-logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  object-fit: contain;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.1);
 }
 
 .workplace-auth-tools {

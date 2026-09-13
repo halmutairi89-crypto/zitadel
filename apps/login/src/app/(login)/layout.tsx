@@ -12,6 +12,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { headers } from "next/headers";
+import { getWorkplaceLoginContext } from "@/lib/workplace-context";
 import React, { Suspense } from "react";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -23,6 +24,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale = await getLocale();
   const _headers = await headers();
   const { serviceConfig } = getServiceConfig(_headers);
+  const workplaceContext = await getWorkplaceLoginContext();
+  const productName = workplaceContext?.tenantName || "Workplace";
+  const brandStyle = workplaceContext
+    ? ({
+        "--workplace-primary": workplaceContext.primaryColor || "#16794a",
+        "--workplace-accent": workplaceContext.accentColor || workplaceContext.primaryColor || "#16794a",
+        "--theme-light-primary-500": workplaceContext.primaryColor || "#16794a",
+        "--theme-light-primary-600": workplaceContext.accentColor || workplaceContext.primaryColor || "#12673e",
+      } as React.CSSProperties)
+    : undefined;
 
   let languages = LANGS;
   try {
@@ -39,7 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
       <head />
-      <body>
+      <body style={brandStyle}>
         <ThemeProvider>
           <Tooltip.Provider>
             <Suspense
@@ -60,9 +71,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <LanguageProvider>
                 <BackgroundWrapper className="workplace-auth-shell">
                   <header className="workplace-auth-header">
-                    <a href="http://platform.localhost:3050" className="workplace-auth-wordmark">
-                      <span aria-hidden="true">W</span>
-                      <strong>Workplace</strong>
+                    <a href="http://platform.localhost:3050" className="workplace-auth-wordmark" aria-label={productName}>
+                      {workplaceContext?.logoUrl ? (
+                        <img src={workplaceContext.logoUrl} alt="" className="workplace-auth-logo" />
+                      ) : (
+                        <span aria-hidden="true">{productName.slice(0, 1).toUpperCase()}</span>
+                      )}
+                      <strong>{productName}</strong>
                     </a>
                     <div className="workplace-auth-tools">
                       <LanguageSwitcher languages={languages} />

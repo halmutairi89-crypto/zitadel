@@ -8,6 +8,7 @@ import { createLogger } from "@/lib/logger";
 import { sendLoginname } from "@/lib/server/loginname";
 import { constructUrl } from "@/lib/service-url";
 import { findValidSession } from "@/lib/session";
+import { persistWorkplaceLoginContext } from "@/lib/workplace-context";
 import {
   createCallback,
   createResponse,
@@ -248,6 +249,12 @@ export async function handleOIDCFlowInitiation(params: FlowInitiationParams): Pr
   const { serviceConfig, requestId, sessions, sessionCookies, request } = params;
 
   const { authRequest } = await getAuthRequest({ serviceConfig, authRequestId: requestId.replace("oidc_", "") });
+
+  // The product supplies a signed display context through login_hint. Replace
+  // it with the actual email only after verification and retain the tenant
+  // presentation in an HTTP-only cookie for password/MFA/recovery pages.
+  const workplaceContext = await persistWorkplaceLoginContext(authRequest?.loginHint);
+  if (authRequest && workplaceContext?.email) authRequest.loginHint = workplaceContext.email;
 
   const locale = getValidLocaleFromUILocales(authRequest?.uiLocales);
   if (locale) {
