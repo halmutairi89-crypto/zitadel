@@ -1,0 +1,24 @@
+FROM node:24-alpine AS build
+WORKDIR /repo
+RUN corepack enable
+COPY . .
+RUN pnpm install --filter @zitadel/login... --frozen-lockfile
+RUN pnpm nx run login:build --skip-nx-cache
+
+FROM node:24-alpine
+WORKDIR /app
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs && \
+    mkdir -p /.env-file && touch /.env-file/.env && chown -R nextjs:nodejs /.env-file
+COPY --from=build --chown=nextjs:nodejs /repo/apps/login/.next/standalone ./
+USER nextjs
+ENV HOSTNAME="::" \
+    PORT="3000" \
+    NODE_ENV="production" \
+    NODE_OPTIONS="--use-openssl-ca --require /app/load-ssl-cert-dir.cjs" \
+    SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt" \
+    ZITADEL_TLS_ENABLED="false" \
+    OTEL_SERVICE_NAME="workplace-identity-login"
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD ["/usr/local/bin/node", "/app/healthcheck.mjs", "/auth/ready"]
+ENTRYPOINT ["/app/entrypoint.sh", "node", "apps/login/server.js"]
