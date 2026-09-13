@@ -85,6 +85,9 @@ export default getRequestConfig(async () => {
 
   return {
     locale,
-    messages: deepmerge.all([fallbackMessages, localeMessages, customMessages]) as Record<string, string>,
+    // Product copy wins over identity-engine hosted translations. Tenant visual
+    // branding still comes from the organization, but backend defaults must
+    // never reintroduce vendor names or stale inherited wording.
+    messages: deepmerge.all([fallbackMessages, customMessages, localeMessages]) as Record<string, string>,
   };
 });
