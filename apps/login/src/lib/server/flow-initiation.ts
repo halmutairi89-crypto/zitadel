@@ -254,7 +254,7 @@ export async function handleOIDCFlowInitiation(params: FlowInitiationParams): Pr
   // it with the actual email only after verification and retain the tenant
   // presentation in an HTTP-only cookie for password/MFA/recovery pages.
   const workplaceContext = await persistWorkplaceLoginContext(authRequest?.loginHint);
-  if (authRequest && workplaceContext?.email) authRequest.loginHint = workplaceContext.email;
+  if (authRequest && workplaceContext) authRequest.loginHint = workplaceContext.email || "";
 
   const locale = getValidLocaleFromUILocales(authRequest?.uiLocales);
   if (locale) {
